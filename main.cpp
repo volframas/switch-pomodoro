@@ -35,7 +35,7 @@ int main(int argc, char* argv[]) {
             lastTime = currentTime;
         }
 
-        // Fonas
+        // Tamsus fonas
         SDL_SetRenderDrawColor(renderer, 26, 26, 46, 255);
         SDL_RenderClear(renderer);
 
@@ -43,10 +43,10 @@ int main(int argc, char* argv[]) {
         int centerY = SCREEN_HEIGHT / 2;
         int radius = 180;
 
-        // Pilkas žiedas
+        // Pilkas žiedas fone
         arcRGBA(renderer, centerX, centerY, radius, 0, 360, 60, 63, 85, 255);
 
-        // Ryškus progreso žiedas
+        // Ryškus trumpėjantis progreso žiedas
         double percentage = (double)timeRemaining / TOTAL_TIME;
         int endAngle = (int)(percentage * 360) - 90; 
 
@@ -56,13 +56,13 @@ int main(int argc, char* argv[]) {
             }
         }
 
-        // Laiko tekstas (pataisyta masyvo sintaksė)
+        // PATAISYTA: Sukurtas simbolių masyvas, kad tilptų tekstas
         int mins = timeRemaining / 60;
         int secs = timeRemaining % 60;
         char timeText[16];
         sprintf(timeText, "%02d:%02d", mins, secs);
 
-        // Teksto braižymas
+        // Teksto braižymas centre
         stringRGBA(renderer, centerX - 20, centerY - 5, timeText, 255, 255, 255, 255);
 
         SDL_RenderPresent(renderer);
