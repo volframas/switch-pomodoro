@@ -43,7 +43,7 @@ int main(int argc, char* argv[]) {
         int centerY = SCREEN_HEIGHT / 2;
         int radius = 180;
 
-        // Pilkas žiedas fone
+        // Pilkas fono žiedas
         arcRGBA(renderer, centerX, centerY, radius, 0, 360, 60, 63, 85, 255);
 
         // Ryškus trumpėjantis progreso žiedas
@@ -56,10 +56,10 @@ int main(int argc, char* argv[]) {
             }
         }
 
-        // PATAISYTA: Sukurtas simbolių masyvas, kad tilptų tekstas
+        // LAIKO TEKSTO MASYVAS (Šį kartą tiksliai nurodytas dydis)
         int mins = timeRemaining / 60;
         int secs = timeRemaining % 60;
-        char timeText[16];
+        char timeText[10];
         sprintf(timeText, "%02d:%02d", mins, secs);
 
         // Teksto braižymas centre
