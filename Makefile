@@ -1,26 +1,32 @@
-TARGET := pomodoro
-BUILD := build
-SOURCES := .
-INCLUDES := .
+# Programos nustatymai
+TARGET       := pomodoro
+TITLE        := Pomodoro Timer
+AUTHOR       := Volframas
+VERSION      := 1.0.0
 
-# Nurodome programėlės duomenis, kad kompiliatorius nebeišmestų klaidos
-APP_TITLE := Pomodoro Timer
-APP_AUTHOR := Volframas
-APP_VERSION := 1.0.0
-
+# Aplankai
+export DEVKITPRO ?= /opt/devkitpro
 include $(DEVKITPRO)/libnx/switch_rules
 
-CFLAGS := -g -Wall -O2 -march=armv8-a+crc+crypto -mtune=cortex-a57 -mtp=soft -fPIE
+# Kompiliatoriaus nustatymai
+CXX      := aarch64-none-elf-g++
+CXXFLAGS := -g -Wall -O2 -march=armv8-a+crc+crypto -mtune=cortex-a57 -fPIE $(INCLUDE) -I$(TARGET) -I$(DEVKITPRO)/portlibs/switch/include
+LDFLAGS  := -specs=$(DEVKITPRO)/libnx/switch.specs -g -march=armv8-a+crc+crypto -mtune=cortex-a57 -Wl,-Map,$(TARGET).map
 
-LIBS := -lswitch -lSDL2_gfx -lSDL2 -lpng -ljpeg -lwebp -lz
+# Grafinės bibliotekos
+LIBS     := -lSDL2_gfx -lSDL2 -lswitch -lpng -ljpeg -lwebp -lz
 
-export OUTPUT := $(CURDIR)/$(TARGET)
-export TOPDIR := $(CURDIR)
+# Pagrindinės užduotys
+all: $(TARGET).nro
 
-SUFX := .nro
+$(TARGET).nro: $(TARGET).elf
+	@elf2nro $< $@ --title="$(TITLE)" --author="$(AUTHOR)" --version="$(VERSION)"
 
-all: $(OUTPUT)$(SUFX)
+$(TARGET).elf: main.o
+	$(CXX) $(LDFLAGS) -PIE -Wl,--nx $^ $(LIBS) -o $@
 
-$(OUTPUT).nro: $(OUTPUT).elf
-$(OUTPUT).elf: main.o
-	$(CC) -g $(LDFLAGS) -PIE -Wl,--nx -mthumb $^ $(LIBS) -o $@
+main.o: main.cpp
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
+clean:
+	rm -f *.o *.elf *.nro *.map
