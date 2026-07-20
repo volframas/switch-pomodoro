@@ -1,8 +1,7 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL2_gfxPrimitives.h> 
 #include <switch.h>
-#include <iostream>
-#include <string>
+#include <stdio.h>
 
 const int SCREEN_WIDTH = 1280;
 const int SCREEN_HEIGHT = 720;
@@ -13,7 +12,6 @@ int main(int argc, char* argv[]) {
     SDL_Window* window = SDL_CreateWindow("Pomodoro", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
     SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 
-    // Pomodoro nustatymai (25 minutes)
     const int TOTAL_TIME = 25 * 60; 
     int timeRemaining = TOTAL_TIME;
     bool isRunning = false;
@@ -37,7 +35,7 @@ int main(int argc, char* argv[]) {
             lastTime = currentTime;
         }
 
-        // Fonas (#1a1a2e)
+        // Fonas
         SDL_SetRenderDrawColor(renderer, 26, 26, 46, 255);
         SDL_RenderClear(renderer);
 
@@ -45,10 +43,10 @@ int main(int argc, char* argv[]) {
         int centerY = SCREEN_HEIGHT / 2;
         int radius = 180;
 
-        // Pilkas neaktyvus žiedas
+        // Pilkas žiedas
         arcRGBA(renderer, centerX, centerY, radius, 0, 360, 60, 63, 85, 255);
 
-        // Ryškus trumpėjantis progreso žiedas
+        // Ryškus progreso žiedas
         double percentage = (double)timeRemaining / TOTAL_TIME;
         int endAngle = (int)(percentage * 360) - 90; 
 
@@ -58,13 +56,13 @@ int main(int argc, char* argv[]) {
             }
         }
 
-        // Teksto atvaizdavimas naudojant vidinę SDL_gfx funkciją (nereikia .ttf failo)
+        // Laiko tekstas (pataisyta masyvo sintaksė)
         int mins = timeRemaining / 60;
         int secs = timeRemaining % 60;
-        char timeText[10];
+        char timeText[16];
         sprintf(timeText, "%02d:%02d", mins, secs);
 
-        // Padidiname tekstą centre nupiešdami jį didesniu masteliu
+        // Teksto braižymas
         stringRGBA(renderer, centerX - 20, centerY - 5, timeText, 255, 255, 255, 255);
 
         SDL_RenderPresent(renderer);
