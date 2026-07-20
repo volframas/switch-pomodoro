@@ -1,22 +1,28 @@
-# Programos nustatymai
-TARGET       := pomodoro
-TITLE        := Pomodoro Timer
-AUTHOR       := Volframas
-VERSION      := 1.0.0
+# Patikriname devkitPro aplinką
+ifeq ($(strip $(DEVKITPRO)),)
+$(error "Please set DEVKITPRO in your environment")
+endif
 
-# Aplankai
-export DEVKITPRO ?= /opt/devkitpro
 include $(DEVKITPRO)/libnx/switch_rules
 
-# Kompiliatoriaus nustatymai
-CXX      := aarch64-none-elf-g++
-CXXFLAGS := -g -Wall -O2 -march=armv8-a+crc+crypto -mtune=cortex-a57 -fPIE $(INCLUDE) -I$(TARGET) -I$(DEVKITPRO)/portlibs/switch/include
-LDFLAGS  := -specs=$(DEVKITPRO)/libnx/switch.specs -g -march=armv8-a+crc+crypto -mtune=cortex-a57 -Wl,-Map,$(TARGET).map
+TARGET      := pomodoro
+TITLE       := Pomodoro Timer
+AUTHOR      := Volframas
+VERSION     := 1.0.0
 
-# Grafinės bibliotekos
-LIBS     := -lSDL2_gfx -lSDL2 -lswitch -lpng -ljpeg -lwebp -lz
+# Nurodome kompiliatoriui, kur ieškoti bibliotekų (suras switch.h)
+INCLUDE     := -I$(DEVKITPRO)/libnx/include -I$(DEVKITPRO)/portlibs/switch/include
+LIBDIRS     := -L$(DEVKITPRO)/libnx/lib -L$(DEVKITPRO)/portlibs/switch/lib
 
-# Pagrindinės užduotys
+# Sujungiame grafines dalis
+LIBS        := -lSDL2_gfx -lSDL2 -lswitch -lpng -ljpeg -lwebp -lz
+
+export CFLAGS   := -g -Wall -O2 -march=armv8-a+crc+crypto -mtune=cortex-a57 -fPIE $(INCLUDE)
+export CXXFLAGS := $(CFLAGS)
+export LDFLAGS  := -specs=$(DEVKITPRO)/libnx/switch.specs -g -march=armv8-a+crc+crypto -mtune=cortex-a57 $(LIBDIRS)
+
+.PHONY: all clean
+
 all: $(TARGET).nro
 
 $(TARGET).nro: $(TARGET).elf
